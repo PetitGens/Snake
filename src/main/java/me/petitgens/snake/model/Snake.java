@@ -45,11 +45,7 @@ public class Snake {
         if(newHeadX < 0 || newHeadX >= grid.length || newHeadY < 0 || newHeadY >= grid.length){
             throw new DeathException();
         }
-
-        System.out.println(newHeadX + " / " + newHeadY);
         Square destinationSquare = grid[newHeadY][newHeadX];
-
-        //System.out.println(destinationSquare.getClass().getName());
 
         if(destinationSquare.isSolid()){
             throw new DeathException();

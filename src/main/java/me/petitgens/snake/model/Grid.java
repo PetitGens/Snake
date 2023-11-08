@@ -29,9 +29,9 @@ public class Grid {
         placeFruit();
 
         ArrayList<SnakeBody> snakeParts = new ArrayList<>();
-        snakeParts.add(new SnakeBody(4, 4));
-        snakeParts.add(new SnakeBody(5, 4));
         snakeParts.add(new SnakeBody(6, 4));
+        snakeParts.add(new SnakeBody(7, 4));
+        snakeParts.add(new SnakeBody(8, 4));
 
         snake = new Snake(grid, snakeParts);
     }

@@ -1,5 +1,7 @@
 package me.petitgens.snake;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -8,6 +10,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 import me.petitgens.snake.model.*;
 import me.petitgens.snake.model.Void;
 
@@ -25,6 +28,10 @@ public class GridController implements Initializable {
 
     private boolean dead = false;
 
+    private Timeline timeline;
+    private Direction previousDirection = Direction.LEFT;
+    private Direction direction = Direction.LEFT;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializeGridPane();
@@ -32,7 +39,9 @@ public class GridController implements Initializable {
         gridModel = new Grid(GRID_SIZE);
         updateGridView();
 
-
+        timeline = new Timeline(new KeyFrame(Duration.millis(100), event -> onInterval()));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
     }
 
     public void initializeGridPane(){
@@ -98,19 +107,28 @@ public class GridController implements Initializable {
             default:
                 return;
         }
+        this.direction = direction;
+    }
+
+    public void onInterval(){
         try{
             gridModel.moveSnake(direction);
             updateGridView();
         }
         catch (DeathException e){
             dead = true;
+            timeline.stop();
             System.out.println("Dead");
             return;
         }
         catch (UTurnException e){
-            System.out.println("U-Turn");
+            if(direction == previousDirection){
+                throw new RuntimeException("Snake stuck in a U-turn-exception loop");
+            }
+            direction = previousDirection;
+            onInterval();
             return;
         }
-
+        previousDirection = direction;
     }
 }
