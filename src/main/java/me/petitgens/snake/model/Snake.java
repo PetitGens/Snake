@@ -15,7 +15,7 @@ public class Snake {
 
         for(SnakeBody part : body){
             this.body.addLast(part);
-            this.grid[part.getX()][part.getY()] = part;
+            this.grid[part.getY()][part.getX()] = part;
         }
     }
 
@@ -46,18 +46,23 @@ public class Snake {
             throw new DeathException();
         }
 
+        System.out.println(newHeadX + " / " + newHeadY);
         Square destinationSquare = grid[newHeadY][newHeadX];
+
+        //System.out.println(destinationSquare.getClass().getName());
 
         if(destinationSquare.isSolid()){
             throw new DeathException();
         }
 
         body.addFirst(new SnakeBody(newHeadX, newHeadY));
-        grid[newHeadX][newHeadY] = body.getFirst();
+        grid[newHeadY][newHeadX] = body.getFirst();
 
-        if(! (destinationSquare instanceof Fruit)){
+        if(destinationSquare instanceof Fruit){
+            ((Fruit)destinationSquare).eat();
+        } else{
             SnakeBody tail = body.getLast();
-            grid[tail.getX()][tail.getY()] = VOID;
+            grid[tail.getY()][tail.getX()] = VOID;
             body.removeLast();
         }
     }

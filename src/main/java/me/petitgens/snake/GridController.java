@@ -3,6 +3,8 @@ package me.petitgens.snake;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -21,12 +23,16 @@ public class GridController implements Initializable {
     // Number of rows and columns
     private final int GRID_SIZE = 20;
 
+    private boolean dead = false;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializeGridPane();
 
         gridModel = new Grid(GRID_SIZE);
         updateGridView();
+
+
     }
 
     public void initializeGridPane(){
@@ -55,8 +61,8 @@ public class GridController implements Initializable {
     public void updateGridView(){
         for(Node node : gameGrid.getChildren()){
             Rectangle cell = (Rectangle) node;
-            int col = GridPane.getRowIndex(cell);
-            int row = GridPane.getColumnIndex(cell);
+            int row = GridPane.getRowIndex(cell);
+            int col = GridPane.getColumnIndex(cell);
 
             Square square = gridModel.getSquare(row, col);
 
@@ -70,5 +76,41 @@ public class GridController implements Initializable {
         }
     }
 
+    public void onKeyPressed(KeyEvent event){
+        if(dead){
+            return;
+        }
 
+        Direction direction;
+        switch(event.getCode()){
+            case UP:
+                direction = Direction.UP;
+                break;
+            case DOWN:
+                direction = Direction.DOWN;
+                break;
+            case LEFT:
+                direction = Direction.LEFT;
+                break;
+            case RIGHT:
+                direction = Direction.RIGHT;
+                break;
+            default:
+                return;
+        }
+        try{
+            gridModel.moveSnake(direction);
+            updateGridView();
+        }
+        catch (DeathException e){
+            dead = true;
+            System.out.println("Dead");
+            return;
+        }
+        catch (UTurnException e){
+            System.out.println("U-Turn");
+            return;
+        }
+
+    }
 }

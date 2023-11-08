@@ -4,7 +4,7 @@ public class Fruit extends Square{
     private boolean eaten = false;
     @Override
     public boolean isSolid() {
-        return true;
+        return false;
     }
 
     public void eat(){

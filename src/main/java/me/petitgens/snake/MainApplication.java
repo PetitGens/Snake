@@ -10,6 +10,10 @@ public class MainApplication extends Application {
     public void start(Stage stage) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("grid.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 400, 400);
+
+        GridController controller = fxmlLoader.getController();
+        scene.setOnKeyPressed(event -> controller.onKeyPressed(event));
+
         stage.setTitle("Snake");
         stage.setScene(scene);
         stage.show();

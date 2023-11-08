@@ -52,4 +52,11 @@ public class Grid {
     public Square getSquare(int row, int column){
         return grid[row][column];
     }
+
+    public void moveSnake(Direction direction) throws UTurnException, DeathException {
+        snake.move(direction);
+        if(fruit.isEaten()){
+            placeFruit();
+        }
+    }
 }
